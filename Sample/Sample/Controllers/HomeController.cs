@@ -18,8 +18,7 @@ namespace Sample.Controllers
     public class HomeController : Controller
     {
         public ActionResult Index()
-        {
-            FederatedAuthentication.SessionAuthenticationModule.SignOut();
+        {            
             return View();
         }
 
