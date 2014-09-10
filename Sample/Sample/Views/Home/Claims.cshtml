@@ -1,7 +1,8 @@
-﻿<h3>@ViewBag.Message</h3>
+﻿@model System.Security.Claims.ClaimsPrincipal
+<h3>@ViewBag.Message</h3>
 
 <dl>
-    @foreach (var claim in System.Security.Claims.ClaimsPrincipal.Current.Claims)
+    @foreach (var claim in @Model.Claims)
     {
         <dt>
             @claim.Type

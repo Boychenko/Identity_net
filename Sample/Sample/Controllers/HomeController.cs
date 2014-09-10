@@ -2,9 +2,16 @@
 using System.Collections.Generic;
 using System.IdentityModel.Services;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Security.Claims;
+using System.Security.Permissions;
 using System.Web;
 using System.Web.Mvc;
+
+using Thinktecture.IdentityModel;
+using Thinktecture.IdentityModel.SystemWeb.Mvc;
+
+using AuthorizationContext = System.Security.Claims.AuthorizationContext;
 
 namespace Sample.Controllers
 {
@@ -33,11 +40,28 @@ namespace Sample.Controllers
         [Authorize]
         public ActionResult Claims()
         {
-            var b = FederatedAuthentication.FederationConfiguration.IdentityConfiguration.ClaimsAuthorizationManager.CheckAccess
-                (new System.Security.Claims.AuthorizationContext(ClaimsPrincipal.Current, "Claims", "View"));
             ViewBag.Message = "Claims";
 
             return View(ClaimsPrincipal.Current);
         }
+
+/*        [ClaimsPrincipalPermission(SecurityAction.Demand, 
+            Operation = "Print", 
+            Resource = "Document")]
+        [PrincipalPermission(SecurityAction.Demand, Role = "PrinterStaff")]
+        [ResourceActionAuthorize("Print", "Document")]
+        [Authorize(Roles = "Admin,PrinterStaff")]
+        public ActionResult PrintDocument(string documentText)
+        {
+            string result = "Printed";
+            var authorizationManager = FederatedAuthentication.FederationConfiguration.IdentityConfiguration.ClaimsAuthorizationManager;
+            result =
+                authorizationManager.CheckAccess(new AuthorizationContext(ClaimsPrincipal.Current, "Document", "Print"))
+                    ? "Printed"
+                    : "Forbidden";
+            result = Thinktecture.IdentityModel.ClaimsAuthorization.CheckAccess("Document", "Print") ? "Printed"
+                    : "Forbidden"; ;
+            return Content(result);
+        }*/
     }
 }

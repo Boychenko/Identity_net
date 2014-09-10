@@ -33,7 +33,10 @@ namespace Sample
 
         private void EstablishSession(ClaimsPrincipal principal)
         {
-            var token = new SessionSecurityToken(principal, TimeSpan.FromHours(8));
+            var token = new SessionSecurityToken(principal, TimeSpan.FromHours(8))
+            {
+                IsReferenceMode = true
+            };
             FederatedAuthentication.SessionAuthenticationModule.WriteSessionTokenToCookie(token);
         }
     }
