@@ -33,6 +33,8 @@ namespace Sample.Controllers
         [Authorize]
         public ActionResult Claims()
         {
+            var b = FederatedAuthentication.FederationConfiguration.IdentityConfiguration.ClaimsAuthorizationManager.CheckAccess
+                (new System.Security.Claims.AuthorizationContext(ClaimsPrincipal.Current, "Claims", "View"));
             ViewBag.Message = "Claims";
 
             return View(ClaimsPrincipal.Current);

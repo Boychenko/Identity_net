@@ -35,9 +35,7 @@ namespace Sample.Controllers
                     var claimsUser = manager.Find(model.UserName, model.Password);
                     if (claimsUser != null)
                     {
-                        var authenticateManager = FederatedAuthentication.FederationConfiguration.IdentityConfiguration.ClaimsAuthenticationManager;
-                        var principal = new ClaimsPrincipal(manager.CreateIdentity(claimsUser, "Forms"));
-                        authenticateManager.Authenticate(string.Empty, principal);
+                        Authenticate(manager, claimsUser);
                         return RedirectToLocal(returnUrl);
                     }
                 };
@@ -48,6 +46,14 @@ namespace Sample.Controllers
             return View(model);
         }
 
+        private static void Authenticate(UserManager<IdentityUser> manager, IdentityUser claimsUser)
+        {
+            var authenticateManager =
+                FederatedAuthentication.FederationConfiguration.IdentityConfiguration.ClaimsAuthenticationManager;
+            var principal = new ClaimsPrincipal(manager.CreateIdentity(claimsUser, "Forms"));
+            authenticateManager.Authenticate(string.Empty, principal);
+        }
+
         //
         // POST: /Account/LogOff
 
@@ -55,7 +61,7 @@ namespace Sample.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            //WebSecurity.Logout();
+            FederatedAuthentication.SessionAuthenticationModule.SignOut();
 
             return RedirectToAction("Index", "Home");
         }
@@ -88,13 +94,7 @@ namespace Sample.Controllers
                         var result = manager.Create(user, model.Password);
                         if (result.Succeeded)
                         {
-                            //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
-                            // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                            // Send an email with this link
-                            // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                            // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                            // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                            Authenticate(manager, user);
 
                             return RedirectToAction("Index", "Home");
                         }
