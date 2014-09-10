@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Services;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 
@@ -10,6 +12,7 @@ namespace Sample.Controllers
     {
         public ActionResult Index()
         {
+            FederatedAuthentication.SessionAuthenticationModule.SignOut();
             return View();
         }
 
@@ -25,6 +28,14 @@ namespace Sample.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        [Authorize]
+        public ActionResult Claims()
+        {
+            ViewBag.Message = "Claims";
+
+            return View(ClaimsPrincipal.Current);
         }
     }
 }
