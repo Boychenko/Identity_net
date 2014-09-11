@@ -43,7 +43,7 @@ namespace Sample.Controllers
             return View(ClaimsPrincipal.Current);
         }
 
-/*        [ClaimsPrincipalPermission(SecurityAction.Demand, 
+        [ClaimsPrincipalPermission(SecurityAction.Demand, 
             Operation = "Print", 
             Resource = "Document")]
         [PrincipalPermission(SecurityAction.Demand, Role = "PrinterStaff")]
@@ -51,15 +51,11 @@ namespace Sample.Controllers
         [Authorize(Roles = "Admin,PrinterStaff")]
         public ActionResult PrintDocument(string documentText)
         {
-            string result = "Printed";
             var authorizationManager = FederatedAuthentication.FederationConfiguration.IdentityConfiguration.ClaimsAuthorizationManager;
-            result =
-                authorizationManager.CheckAccess(new AuthorizationContext(ClaimsPrincipal.Current, "Document", "Print"))
-                    ? "Printed"
-                    : "Forbidden";
-            result = Thinktecture.IdentityModel.ClaimsAuthorization.CheckAccess("Document", "Print") ? "Printed"
-                    : "Forbidden"; ;
-            return Content(result);
-        }*/
+            bool allow;
+            allow = authorizationManager.CheckAccess(new AuthorizationContext(ClaimsPrincipal.Current, "Document", "Print"));
+            allow = Thinktecture.IdentityModel.ClaimsAuthorization.CheckAccess("Document", "Print");
+            return Content(allow ? "Printed": "Forbidden");
+        }
     }
 }
