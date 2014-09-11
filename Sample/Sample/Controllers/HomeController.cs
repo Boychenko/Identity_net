@@ -51,8 +51,8 @@ namespace Sample.Controllers
         [Authorize(Roles = "Admin,PrinterStaff")]
         public ActionResult PrintDocument(string documentText)
         {
-            var authorizationManager = FederatedAuthentication.FederationConfiguration.IdentityConfiguration.ClaimsAuthorizationManager;
             bool allow;
+            var authorizationManager = FederatedAuthentication.FederationConfiguration.IdentityConfiguration.ClaimsAuthorizationManager;
             allow = authorizationManager.CheckAccess(new AuthorizationContext(ClaimsPrincipal.Current, "Document", "Print"));
             allow = Thinktecture.IdentityModel.ClaimsAuthorization.CheckAccess("Document", "Print");
             return Content(allow ? "Printed": "Forbidden");
