@@ -38,7 +38,7 @@ namespace Sample.Controllers
                         Authenticate(manager, claimsUser);
                         return RedirectToLocal(returnUrl);
                     }
-                };
+                }
             }
 
             // If we got this far, something failed, redisplay form
@@ -48,10 +48,6 @@ namespace Sample.Controllers
 
         private static void Authenticate(UserManager<IdentityUser> manager, IdentityUser claimsUser)
         {
-            var authenticateManager =
-                FederatedAuthentication.FederationConfiguration.IdentityConfiguration.ClaimsAuthenticationManager;
-            var principal = new ClaimsPrincipal(manager.CreateIdentity(claimsUser, "Forms"));
-            authenticateManager.Authenticate(string.Empty, principal);
         }
 
         //
@@ -61,8 +57,6 @@ namespace Sample.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            FederatedAuthentication.SessionAuthenticationModule.SignOut();
-
             return RedirectToAction("Index", "Home");
         }
 
